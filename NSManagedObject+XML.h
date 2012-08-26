@@ -12,10 +12,11 @@
 
 // This category uses the Google Tool Box class for base64 encoding / decoding
 // at http://google-toolbox-for-mac.googlecode.com/svn/trunk
+// specifically GTMStringEncoding, which is included here,
 //
-// the KissXML project at https://github.com/robbiehanson/KissXML.git
+// the KissXML project at https://github.com/robbiehanson/KissXML.git as a git submodule,
 //
-// And Apple's SecKeyWrapper sample code at http://developer.apple.com
+// and Apple's SecKeyWrapper sample code at http://developer.apple.com also include here
 //
 // It also uses a DataFormatter singleton which instantiates NSDateFormatter once
 // and reuses it for performance reasons, instead of instantiating it for every use
