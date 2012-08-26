@@ -9,6 +9,7 @@
 #import "DateFormatter.h"
 #import "EncryptionHelper.h"
 #import "GTMStringEncoding.h"
+#import "DDXMLElement+conv.h"
 
 @implementation NSManagedObject (XML)
 
