@@ -15,6 +15,7 @@
 // specifically GTMStringEncoding, which is included here,
 //
 // the KissXML project at https://github.com/robbiehanson/KissXML.git as a git submodule,
+// so you will need to add /usr/include/libxml2 to your header search paths in the build settings
 //
 // and Apple's SecKeyWrapper sample code at http://developer.apple.com also include here
 //
