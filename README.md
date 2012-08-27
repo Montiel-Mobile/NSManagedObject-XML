@@ -1,7 +1,7 @@
 README
 ======
 
-This is a category on NSManagedObject that implements KissXML to generate a DDXMLElement object from an NSManagedObject, and ingest a DDXMLElement to populate an NSManagedObject and any sub entities (if configured to) to be created and/or sub entities to establish relationships to (either to reference entities/tables or relationship entities within a hierarchy).
+This is a category on NSManagedObject that implements KissXML to generate a DDXMLElement object from an NSManagedObject, and to ingest a DDXMLElement object to populate an NSManagedObject and any sub entities (if configured to) to be created and/or sub entities to establish relationships to (either to reference entities/tables or relationship entities within a hierarchy).
 
 HOW TO USE IT
 -------------
@@ -11,7 +11,7 @@ This category uses the Google Tool Box class for base64 encoding/decoding at htt
 Core Data UserInfo Keys
 =======================
 
-Use this keys in the user info section when configuring the core data model to enable the associated behavior.
+Use these keys in the user info section when configuring the core data model to enable the associated behavior.
 
 Entity Description UserInfo keys
 --------------------------------
