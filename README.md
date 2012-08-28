@@ -22,8 +22,6 @@ Entity Description UserInfo keys
 
 'SortedRelationships' - value is unused, it's presence identifies an entity that sorts relationships when ingesting XML. If this key is specified, then the 'SortOrder' below is required on ALL relationships for the entity. This may be required for relationship dependancies by ensuring created sub entities are ingested before relation sub entities (which are not created but instead a relationship is established to previously created sub entities).
 
-'RootHierarchyAttrKey' - value identifies the path of the unique id of the entity at the top of the hierarchy relative to the given entity.
-
 
 Attribute Description UserInfo keys
 -----------------------------------
@@ -35,6 +33,7 @@ Attribute Description UserInfo keys
 'exclude' - value is unused, it's presence is used to exclude an attribute from XML expansion by default all attributes will get expanded.
 
 'Format' - value is used as the format for NSDateFormatter, if present. Otherwise the global kDateFormat is used.
+
 
 Relationship Description UserInfo keys
 --------------------------------------
@@ -48,6 +47,9 @@ Relationship Description UserInfo keys
 'Relation' - value is unused, it's presence is used to identify the relationship to an entity within the root entity's hierarchy structure (does not create the relationship entity).
 
 'SortOrder' - value is a number that indicates the order to sort the relationships of the entity.
+
+'RootHierarchyAttrKey' - value identifies the path of the unique id of the entity at the top of the hierarchy relative to the given entity.
+
 
 LICENSE
 -------

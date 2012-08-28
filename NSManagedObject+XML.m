@@ -193,30 +193,35 @@
         // to a case related entity
         else if ([[relationship userInfo] objectForKey:kRelation])
         {
-            if (relationship.isToMany)
+            NSString *relUniqueIDKey = [relationship.entity.userInfo objectForKey:kReferenceKey];
+            
+            if (relUniqueIDKey)
             {
-                for (DDXMLElement *relationshipElement in manyRelElements)
+                if (relationship.isToMany)
                 {
-                    NSString *uniqueID = [relationshipElement valueForTag:kRelationID];
-                    NSString *rootIDValue = [self uniqueIdValueOfRoot];
-                    NSManagedObject *relObject = [self getObjectForEntityDesc:relationship.destinationEntity forRootIdValue:rootIDValue andUniqueID:uniqueID];
-                    if (relObject)
+                    for (DDXMLElement *relationshipElement in manyRelElements)
                     {
-                        NSMutableSet *objects = [self valueForKey:relationship.name];
-                        [objects addObject:relObject];
-                        [self setValue:objects forKey:relationship.name];
+                        NSString *uniqueID = [relationshipElement valueForTag:relUniqueIDKey];
+                        NSString *rootIDValue = [self uniqueIdValueOfRootForRelationship:relationship];
+                        NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship forRootIdValue:rootIDValue andUniqueID:uniqueID];
+                        if (relObject)
+                        {
+                            NSMutableSet *objects = [self valueForKey:relationship.name];
+                            [objects addObject:relObject];
+                            [self setValue:objects forKey:relationship.name];
+                        }
                     }
                 }
-            }
-            else
-            {
-                if (relationshipElement)
+                else
                 {
-                    NSString *uniqueID = [relationshipElement valueForTag:kRelationID];
-                    NSString *rootIDValue = [self uniqueIdValueOfRoot];
-                    NSManagedObject *relObject = [self getObjectForEntityDesc:relationship.destinationEntity forRootIdValue:rootIDValue andUniqueID:uniqueID];
-                    if (relObject)
-                        [self setValue:relObject forKey:relationship.name];
+                    if (relationshipElement)
+                    {
+                        NSString *uniqueID = [relationshipElement valueForTag:relUniqueIDKey];
+                        NSString *rootIDValue = [self uniqueIdValueOfRootForRelationship:relationship];
+                        NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship forRootIdValue:rootIDValue andUniqueID:uniqueID];
+                        if (relObject)
+                            [self setValue:relObject forKey:relationship.name];
+                    }
                 }
             }
         }
@@ -323,21 +328,21 @@
         [super setValue:value forKeyPath:keyPath];
 }
 
-- (NSString *)uniqueIdValueOfRoot;
+- (NSString *)uniqueIdValueOfRootForRelationship:(NSRelationshipDescription *)relationship;
 {
-    NSString *key = [self.entity.userInfo objectForKey:kRootHierarchyAttrKey];
+    NSString *key = [relationship.entity.userInfo objectForKey:kRootHierarchyAttrKey];
     NSString *retCaseID = [self valueForKeyPath:key];
     return retCaseID;
 }
 
-- (NSManagedObject *)getObjectForEntityDesc:(NSEntityDescription *)inEntityDesc forRootIdValue:(NSString *)inRootIdValue andUniqueID:(NSString *)inID;
+- (NSManagedObject *)getObjectForRelationshipDesc:(NSRelationshipDescription *)inRelEntityDesc forRootIdValue:(NSString *)inRootIdValue andUniqueID:(NSString *)inID;
 {
     NSManagedObject *result = nil;
-    if (inEntityDesc && inRootIdValue && inID)
+    if (inRelEntityDesc.destinationEntity && inRootIdValue && inID)
     {
-        NSFetchRequest *request = [self fetchRequestForEntityName:inEntityDesc.name];
+        NSFetchRequest *request = [self fetchRequestForEntityName:inRelEntityDesc.destinationEntity.name];
         
-        NSString *rootIdKey = rootIdKey = [inEntityDesc.userInfo objectForKey:kRootHierarchyAttrKey];
+        NSString *rootIdKey = rootIdKey = [inRelEntityDesc.entity.userInfo objectForKey:kRootHierarchyAttrKey];
         
         NSString *predicateFormat = [NSString stringWithFormat:@"%@ == '%@' AND id == '%@'", rootIdKey, inRootIdValue, inID];
         

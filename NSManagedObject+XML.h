@@ -40,10 +40,6 @@
 //      relationship is established to the previously created sub entities).
 #define kSortedRelationships @"SortedRelationships"
 
-//      RootHierarchyAttrKey identifies the path of the unique id of the entity at the top of the hierarchy
-//      relative to the given entity
-#define kRootHierarchyAttrKey @"RootHierarchyAttrKey"
-
 
 //ATTRIBUTE USERINFO KEYS
 
@@ -82,10 +78,10 @@
 //      SortOrder's value is a number that indicates the order to sort the relationships
 #define kSortOrder @"SortOrder"
 
+//      RootHierarchyAttrKey identifies the path of the unique id of the entity at the top of the hierarchy
+//      relative to the given entity
+#define kRootHierarchyAttrKey @"RootHierarchyAttrKey"
 
-//      relationship entity will require an attribute, 'id', that is unique at it's level in the root
-//      hierarchy, to establish a connection using the 'Relation' user info key above
-#define kRelationID @"id"
 
 
 
