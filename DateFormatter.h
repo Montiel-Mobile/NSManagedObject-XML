@@ -5,8 +5,8 @@
 #import <Foundation/Foundation.h>
 
 @interface DateFormatter : NSObject 
+@property (readonly, nonatomic) NSDateFormatter *dateFormatter;
 
 + (DateFormatter *)sharedHelper;
-- (NSDateFormatter *)dateFormatter;
 
 @end

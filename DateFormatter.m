@@ -9,28 +9,25 @@ static DateFormatter *sharedInstance = nil;
 
 @interface DateFormatter () 
 {
-    NSDateFormatter *globalDateFormatter;
+
 }
+@property (readwrite, nonatomic) NSDateFormatter *dateFormatter;
 @end
 
 @implementation DateFormatter
+@synthesize dateFormatter;
 
 
 
 #pragma mark -
 #pragma mark Singleton Methods
 
-- (void)dealloc
-{
-    [globalDateFormatter release];
-	[super dealloc];
-}
 - (id)init
 {
 	self = [super init];
 	if (self != nil) 
     {
-        globalDateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter = [[NSDateFormatter alloc] init];
 	}
 	return self;
 }
@@ -54,7 +51,7 @@ static DateFormatter *sharedInstance = nil;
     {
         // The caller expects to receive a new object, so implicitly retain it
         // to balance out the eventual release message.
-        return [sharedInstance retain];
+        return sharedInstance;
     }
     else 
     {
@@ -64,24 +61,13 @@ static DateFormatter *sharedInstance = nil;
     }
 }
 
-- (id)retain
-{
-	// Singletons don't get retained
-	return self;
-}
-
-- (oneway void)release
-{
-	// Singletons don't get released
-}
-
 #pragma mark Custom methods
 
 - (NSDateFormatter *)dateFormatter;
 {
-    globalDateFormatter.dateStyle = NSDateFormatterMediumStyle;
-    globalDateFormatter.timeStyle = NSDateFormatterNoStyle;
-    return globalDateFormatter;
+    dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+    dateFormatter.timeStyle = NSDateFormatterNoStyle;
+    return dateFormatter;
 }
 
 @end

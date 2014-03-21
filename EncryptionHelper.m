@@ -10,12 +10,14 @@
 
 @interface EncryptionHelper ()
 {
-    NSData * symmetricKey;
+
 }
+@property (strong, nonatomic) NSData * symmetricKey;
 @end
 
 @implementation EncryptionHelper
 static EncryptionHelper *sharedInstance = nil;
+@synthesize symmetricKey;
 
 - (id)init
 {
@@ -23,25 +25,20 @@ static EncryptionHelper *sharedInstance = nil;
 	if (self != nil) 
     {
 #if TARGET_IPHONE_SIMULATOR
-        symmetricKey = [[NSData alloc] init];
+        self.symmetricKey = [[NSData alloc] init];
 #else
         SecKeyWrapper *crypto = [SecKeyWrapper sharedWrapper];
-        symmetricKey = [[crypto getSymmetricKeyBytes] retain];
+        self.symmetricKey = [crypto getSymmetricKeyBytes];
         if (!symmetricKey)
         {
             [crypto generateSymmetricKey];
-            symmetricKey = [[crypto getSymmetricKeyBytes] retain];
+            self.symmetricKey = [crypto getSymmetricKeyBytes];
         }
 #endif
 	}
 	return self;
 }
 
-- (void)dealloc
-{
-    [symmetricKey release];
-	[super dealloc];
-}
 
 + (void)initialize
 {
@@ -62,7 +59,7 @@ static EncryptionHelper *sharedInstance = nil;
     {
         // The caller expects to receive a new object, so implicitly retain it
         // to balance out the eventual release message.
-        return [sharedInstance retain];
+        return sharedInstance;
     }
     else 
     {
@@ -70,17 +67,6 @@ static EncryptionHelper *sharedInstance = nil;
         // It's creating the shared instance, let this go through.
         return [super allocWithZone:zone];
     }
-}
-
-- (id)retain
-{
-	// Singletons don't get retained
-	return self;
-}
-
-- (oneway void)release
-{
-	// Singletons don't get released
 }
 
 #pragma mark Encryption methods
@@ -121,7 +107,7 @@ static EncryptionHelper *sharedInstance = nil;
 #if TARGET_IPHONE_SIMULATOR
         NSString *plainText = [[NSString alloc] initWithData:encryptedData encoding:NSASCIIStringEncoding]; 
         
-        return [plainText autorelease];  
+        return plainText;  
 #else
         CCOptions pad = kCCOptionPKCS7Padding;
         
@@ -132,7 +118,7 @@ static EncryptionHelper *sharedInstance = nil;
         
         NSString *plainText = [[NSString alloc] initWithData:plainTextData encoding:NSASCIIStringEncoding]; 
         
-        return [plainText autorelease];  
+        return plainText;  
 #endif
     }
     else 

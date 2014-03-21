@@ -41,7 +41,7 @@
                 attributeDesc.attributeType == NSInteger64AttributeType ||
                 attributeDesc.attributeType == NSDecimalAttributeType)
             {
-                attrValue = [NSString stringWithFormat:@"%i", [(NSNumber *)[self valueForKeyPath:key] integerValue]];
+                attrValue = [NSString stringWithFormat:@"%i", (int)[(NSNumber *)[self valueForKeyPath:key] integerValue]];
             }
             else if (attributeDesc.attributeType == NSDoubleAttributeType)
             {
@@ -57,7 +57,7 @@
             }
             else if (attributeDesc.attributeType == NSBooleanAttributeType)
             {
-                attrValue = [NSString stringWithFormat:@"%i", [(NSNumber *)[self valueForKeyPath:key] integerValue]];
+                attrValue = [NSString stringWithFormat:@"%i", (int)[(NSNumber *)[self valueForKeyPath:key] integerValue]];
             }
             else if (attributeDesc.attributeType == NSDateAttributeType)
             {
@@ -171,7 +171,7 @@
             {
                 for (DDXMLElement *relationshipElement in manyRelElements)
                 {
-                    NSManagedObject *relEntity = [[[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext] autorelease];
+                    NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
                     
                     NSString *inverseRelName = relationship.inverseRelationship.destinationEntity.name;
                     
@@ -183,7 +183,7 @@
             {
                 if (relationshipElement)
                 {
-                    NSManagedObject *relEntity = [[[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext] autorelease];
+                    NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
                     [self setValue:relEntity forKey:relationship.name];
                     [relEntity ingestXMLElement:relationshipElement];
                 }
@@ -354,8 +354,6 @@
         [request setPredicate:predicate];
         [request setIncludesSubentities:YES];
         [request setSortDescriptors:[NSArray arrayWithObjects:sortDesc, sortDesc1, nil]];
-        [sortDesc release];
-        [sortDesc1 release];
         
         NSError *error = nil;
         NSArray *results = [self.managedObjectContext executeFetchRequest:request error:&error];
@@ -379,7 +377,6 @@
     [request setPredicate:predicate];
     [request setIncludesSubentities:YES];
     [request setSortDescriptors:[NSArray arrayWithObjects:sortDesc, nil]];
-    [sortDesc release];
     
     NSError *error = nil;
     NSArray *results = [self.managedObjectContext executeFetchRequest:request error:&error];
@@ -395,7 +392,7 @@
 {
 	NSEntityDescription *entity = [NSEntityDescription entityForName:newEntityName inManagedObjectContext:self.managedObjectContext];
     
-	NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	[request setEntity:entity];
 	
 	return request;
