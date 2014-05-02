@@ -229,13 +229,32 @@
         // to a reference table entity
         else if ([[relationship userInfo] objectForKey:kReference])
         {
-            if (relationshipElement)
+            if (relationship.isToMany)
             {
-                NSString *attrKey = [relationship.destinationEntity.userInfo objectForKey:kReferenceKey];
-                NSString *attrValue = [relationshipElement valueForTag:attrKey];
-                NSManagedObject *relObject = [self getObjectForEntityDesc:relationship.destinationEntity forAttrKey:attrKey andAttrValue:attrValue];
-                if (relObject)
-                    [self setValue:relObject forKey:relationship.name];
+                for (DDXMLElement *relationshipElement in manyRelElements)
+                {
+                    NSString *attrKey = [relationship.destinationEntity.userInfo objectForKey:kReferenceKey];
+                    NSString *attrValue = [relationshipElement valueForTag:attrKey];
+                    NSManagedObject *relObject = [self getObjectForEntityDesc:relationship.destinationEntity forAttrKey:attrKey andAttrValue:attrValue];
+                    if (relObject)
+                    {
+                        NSMutableSet *objects = [self valueForKey:relationship.name];
+                        [objects addObject:relObject];
+                        [self setValue:objects forKey:relationship.name];
+
+                    }
+                }
+            }
+            else
+            {
+                if (relationshipElement)
+                {
+                    NSString *attrKey = [relationship.destinationEntity.userInfo objectForKey:kReferenceKey];
+                    NSString *attrValue = [relationshipElement valueForTag:attrKey];
+                    NSManagedObject *relObject = [self getObjectForEntityDesc:relationship.destinationEntity forAttrKey:attrKey andAttrValue:attrValue];
+                    if (relObject)
+                        [self setValue:relObject forKey:relationship.name];
+                }
             }
         }
     }
