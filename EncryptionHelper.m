@@ -24,7 +24,7 @@ static EncryptionHelper *sharedInstance = nil;
 	self = [super init];
 	if (self != nil) 
     {
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_IPHONE_SIMULATOR == TRUE
         self.symmetricKey = [[NSData alloc] init];
 #else
         SecKeyWrapper *crypto = [SecKeyWrapper sharedWrapper];
@@ -74,7 +74,7 @@ static EncryptionHelper *sharedInstance = nil;
 {
     if (plainText.length > 0)
     {
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_IPHONE_SIMULATOR == TRUE
         return [plainText dataUsingEncoding:NSASCIIStringEncoding];
 #else    
         CCOptions pad = kCCOptionPKCS7Padding;
@@ -104,7 +104,7 @@ static EncryptionHelper *sharedInstance = nil;
 {
     if (encryptedData.length > 0)
     {
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_IPHONE_SIMULATOR == TRUE
         NSString *plainText = [[NSString alloc] initWithData:encryptedData encoding:NSASCIIStringEncoding]; 
         
         return plainText;  
