@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Nsmanagedobject-xml by EmSevn</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Nsmanagedobject-xml</h1>
+          <h2>This is a category on NSManagedObject that implements KissXML to generate a DDXMLElement object from an NSManagedObject, and to ingest a DDXMLElement object to populate an NSManagedObject.</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/EmSevn/NSManagedObject-XML/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/EmSevn/NSManagedObject-XML/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/EmSevn/NSManagedObject-XML" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="readme" class="anchor" href="#readme"><span class="octicon octicon-link"></span></a>README</h1>
+
+<p>This is a category on NSManagedObject that implements KissXML to generate a DDXMLElement object from an NSManagedObject, and to ingest a DDXMLElement object to populate an NSManagedObject and any sub entities (if configured to) to be created and/or sub entities to establish relationships to (either to reference entities/tables or relationship entities within a hierarchy).</p>
+
+<h2>
+<a name="how-to-use-it" class="anchor" href="#how-to-use-it"><span class="octicon octicon-link"></span></a>HOW TO USE IT</h2>
+
+<p>This category uses the Google Tool Box class for base64 encoding/decoding at <a href="http://google-toolbox-for-mac.googlecode.com/svn/trunk">http://google-toolbox-for-mac.googlecode.com/svn/trunk</a>, specifically GTMStringEncoding, which is included here. Also, the KissXML project at <a href="https://github.com/robbiehanson/KissXML.git">https://github.com/robbiehanson/KissXML.git</a> as a git submodule, so you will need to add /usr/include/libxml2 to your header search paths in the build settings. Apple's SecKeyWrapper sample code at <a href="http://developer.apple.com">http://developer.apple.com</a> is also included here. A DataFormatter singleton which instantiates NSDateFormatter once and reuses it for performance reasons, instead of instantiating it for every use for date processing in this category, is provided as well.</p>
+
+<h1>
+<a name="core-data-userinfo-keys" class="anchor" href="#core-data-userinfo-keys"><span class="octicon octicon-link"></span></a>Core Data UserInfo Keys</h1>
+
+<p>Use these keys in the user info section when configuring the core data model to enable the associated behavior.</p>
+
+<h2>
+<a name="entity-description-userinfo-keys" class="anchor" href="#entity-description-userinfo-keys"><span class="octicon octicon-link"></span></a>Entity Description UserInfo keys</h2>
+
+<p>'XMLTagName' - value is used as the XML tagname instead of the entity name (optional - used to override the entity name)</p>
+
+<p>'ReferenceKey' - value is the attribute name that is used as the reference table key</p>
+
+<p>'SortedRelationships' - value is unused, it's presence identifies an entity that sorts relationships when ingesting XML. If this key is specified, then the 'SortOrder' below is required on ALL relationships for the entity. This may be required for relationship dependancies by ensuring created sub entities are ingested before relation sub entities (which are not created but instead a relationship is established to previously created sub entities).</p>
+
+<h2>
+<a name="attribute-description-userinfo-keys" class="anchor" href="#attribute-description-userinfo-keys"><span class="octicon octicon-link"></span></a>Attribute Description UserInfo keys</h2>
+
+<p>'encrypted' - value is unused, it's presence identifies encrypted NSStrings (stored as NSData).</p>
+
+<p>'base64' - value is unused, it's presence identifies binary data that is to be base64 encoded for XML.</p>
+
+<p>'exclude' - value is unused, it's presence is used to exclude an attribute from XML expansion by default all attributes will get expanded.</p>
+
+<p>'Format' - value is used as the format for NSDateFormatter, if present. Otherwise the global kDateFormat is used.</p>
+
+<h2>
+<a name="relationship-description-userinfo-keys" class="anchor" href="#relationship-description-userinfo-keys"><span class="octicon octicon-link"></span></a>Relationship Description UserInfo keys</h2>
+
+<p>'Expand' - value is unused, it's presence identifies a relationship that will be XML expanded. By default no relationships will get expanded.</p>
+
+<p>'CreateEntity' - value is unused, it's presence is used to create the relationship entity when ingesting XML.</p>
+
+<p>'Reference' - value is unused, it's presence is used to identify the relationship to a reference table (does not create the relationship entity).</p>
+
+<p>'Relation' - value is unused, it's presence is used to identify the relationship to an entity within the root entity's hierarchy structure (does not create the relationship entity).</p>
+
+<p>'SortOrder' - value is a number that indicates the order to sort the relationships of the entity.</p>
+
+<p>'RootHierarchyAttrKey' - value identifies the path of the unique id of the entity at the top of the hierarchy relative to the given entity.</p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>LICENSE</h2>
+
+<p>Copyright (C) 2012 by Em Sevn, LLC</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+        </section>
+
+        <footer>
+          Nsmanagedobject-xml is maintained by <a href="https://github.com/EmSevn">EmSevn</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
