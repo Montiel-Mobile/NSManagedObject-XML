@@ -164,8 +164,57 @@
             relationshipElement = [[xmlElement elementsForName:relTagName] lastObject];
         }
         
+        // Check for the CreateEntity & Relation user info key to determine whether to update or create
+        if ([[relationship userInfo] objectForKey:kCreateEntity] &&
+            [[relationship userInfo] objectForKey:kRelation])
+        {
+            NSString *relUniqueIDKey = [relationship.entity.userInfo objectForKey:kReferenceKey];
+            
+            if (relUniqueIDKey)
+            {
+                if (relationship.isToMany)
+                {
+                    for (DDXMLElement *relationshipElement in manyRelElements)
+                    {
+                        NSString *uniqueID = [relationshipElement valueForTag:relUniqueIDKey];
+                        NSString *rootIDValue = [self uniqueIdValueOfRootForRelationship:relationship];
+                        NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship forRootIdValue:rootIDValue andUniqueID:uniqueID];
+                        if (relObject)
+                        {
+                            NSMutableSet *objects = [self valueForKey:relationship.name];
+                            [objects addObject:relObject];
+                            [self setValue:objects forKey:relationship.name];
+                        }
+                        else
+                        {
+                            NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
+                            NSString *inverseRelName = relationship.inverseRelationship.destinationEntity.name;
+                            [relEntity setValue:self forKey:inverseRelName];
+                            [relEntity ingestXMLElement:relationshipElement];
+                        }
+                    }
+                }
+                else
+                {
+                    if (relationshipElement)
+                    {
+                        NSString *uniqueID = [relationshipElement valueForTag:relUniqueIDKey];
+                        NSString *rootIDValue = [self uniqueIdValueOfRootForRelationship:relationship];
+                        NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship forRootIdValue:rootIDValue andUniqueID:uniqueID];
+                        if (relObject)
+                            [self setValue:relObject forKey:relationship.name];
+                        else
+                        {
+                            NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
+                            [self setValue:relEntity forKey:relationship.name];
+                            [relEntity ingestXMLElement:relationshipElement];
+                        }
+                    }
+                }
+            }
+        }
         // Check for the CreateEntity user info key to determine whether to create the relationship entity
-        if ([[relationship userInfo] objectForKey:kCreateEntity])
+        else if ([[relationship userInfo] objectForKey:kCreateEntity])
         {
             if (relationship.isToMany)
             {
@@ -189,8 +238,9 @@
                 }
             }
         }
+        
         // Check for the Relation user info key to determine whether to establish a relationship
-        // to a case related entity
+        // to a related entity
         else if ([[relationship userInfo] objectForKey:kRelation])
         {
             NSString *relUniqueIDKey = [relationship.entity.userInfo objectForKey:kReferenceKey];
@@ -350,8 +400,8 @@
 - (NSString *)uniqueIdValueOfRootForRelationship:(NSRelationshipDescription *)relationship;
 {
     NSString *key = [relationship.entity.userInfo objectForKey:kRootHierarchyAttrKey];
-    NSString *retCaseID = [self valueForKeyPath:key];
-    return retCaseID;
+    NSString *retRootID = [self valueForKeyPath:key];
+    return retRootID;
 }
 
 - (NSManagedObject *)getObjectForRelationshipDesc:(NSRelationshipDescription *)inRelEntityDesc forRootIdValue:(NSString *)inRootIdValue andUniqueID:(NSString *)inID;
