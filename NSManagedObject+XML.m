@@ -165,37 +165,40 @@
         
         // Check for the CreateEntity & Relation user info key to determine whether to update or create
         if ([[relationship userInfo] objectForKey:kCreateEntity] &&
-            [[relationship userInfo] objectForKey:kRelation])
+            [[relationship userInfo] objectForKey:kUpdateEntity])
         {
-            NSString *relUniqueIDKey = [relationship.entity.userInfo objectForKey:kReferenceKey];
-            
-            if (relUniqueIDKey)
+            if (relationship.isToMany)
             {
-                if (relationship.isToMany)
+                for (DDXMLElement *relationshipElement in manyRelElements)
                 {
-                    for (DDXMLElement *relationshipElement in manyRelElements)
+                    NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship andElement:relationshipElement];
+                    if (relObject)
                     {
-                        NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship andElement:relationshipElement];
-                        if (!relObject)
-                        {
-                            NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
-                            NSString *inverseRelName = relationship.inverseRelationship.destinationEntity.name;
-                            [relEntity setValue:self forKey:inverseRelName];
-                            [relEntity ingestXMLElement:relationshipElement];
-                        }
+                        [relObject ingestXMLElement:relationshipElement];
+                    }
+                    else
+                    {
+                        NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
+                        NSString *inverseRelName = relationship.inverseRelationship.destinationEntity.name;
+                        [relEntity setValue:self forKey:inverseRelName];
+                        [relEntity ingestXMLElement:relationshipElement];
                     }
                 }
-                else
+            }
+            else
+            {
+                if (relationshipElement)
                 {
-                    if (relationshipElement)
+                    NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship andElement:relationshipElement];
+                    if (relObject)
                     {
-                        NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship andElement:relationshipElement];
-                        if (!relObject)
-                        {
-                            NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
-                            [self setValue:relEntity forKey:relationship.name];
-                            [relEntity ingestXMLElement:relationshipElement];
-                        }
+                        [relObject ingestXMLElement:relationshipElement];
+                    }
+                    else
+                    {
+                        NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
+                        [self setValue:relEntity forKey:relationship.name];
+                        [relEntity ingestXMLElement:relationshipElement];
                     }
                 }
             }
@@ -228,33 +231,26 @@
         
         // Check for the Relation user info key to determine whether to establish a relationship
         // to a related entity
-        else if ([[relationship userInfo] objectForKey:kRelation])
+        else if ([[relationship userInfo] objectForKey:kUpdateEntity])
         {
-            NSString *relUniqueIDKey = [relationship.entity.userInfo objectForKey:kReferenceKey];
-            
-            if (relUniqueIDKey)
+            if (relationship.isToMany)
             {
-                if (relationship.isToMany)
+                for (DDXMLElement *relationshipElement in manyRelElements)
                 {
-                    for (DDXMLElement *relationshipElement in manyRelElements)
+                    NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship andElement:relationshipElement];
+                    if (relObject)
                     {
-                        NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship andElement:relationshipElement];
-                        if (relObject)
-                        {
-                            NSMutableSet *objects = [self valueForKey:relationship.name];
-                            [objects addObject:relObject];
-                            [self setValue:objects forKey:relationship.name];
-                        }
+                        [relObject ingestXMLElement:relationshipElement];
                     }
                 }
-                else
+            }
+            else
+            {
+                if (relationshipElement)
                 {
-                    if (relationshipElement)
-                    {
-                        NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship andElement:relationshipElement];
-                        if (relObject)
-                            [self setValue:relObject forKey:relationship.name];
-                    }
+                    NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship andElement:relationshipElement];
+                    if (relObject)
+                        [relObject ingestXMLElement:relationshipElement];
                 }
             }
         }
@@ -389,32 +385,32 @@
     id relatedEntities = [self valueForKeyPath:inRelEntityDesc.name];
     NSManagedObject *entity = nil;
     
-    if ([[relatedEntities class] isSubclassOfClass:[NSManagedObject class]])
+    if ([relatedEntities isKindOfClass:[NSManagedObject class]])
     {
         NSString *thisValue = ([[(NSManagedObject *)relatedEntities valueForKeyPath:relKey] isKindOfClass:[NSString class]] ? [(NSManagedObject *)relatedEntities valueForKeyPath:relKey] : [[(NSManagedObject *)relatedEntities valueForKeyPath:relKey] stringValue]);
         if ([thisValue isEqualToString:relKeyValue])
             entity = relatedEntities;
     }
-    else if ([[relatedEntities class] isSubclassOfClass:[NSSet class]])
+    else if ([relatedEntities isKindOfClass:[NSSet class]])
     {
         for (NSManagedObject *thisEntity in [(NSSet *)relatedEntities allObjects])
         {
             NSString *thisValue = ([[thisEntity valueForKeyPath:relKey] isKindOfClass:[NSString class]] ? [thisEntity valueForKeyPath:relKey] : [[thisEntity valueForKeyPath:relKey] stringValue]);
             if ([thisValue isEqualToString:relKeyValue])
             {
-                entity = relatedEntities;
+                entity = thisEntity;
                 break;
             }
         }
     }
-    else if ([[relatedEntities class] isSubclassOfClass:[NSOrderedSet class]])
+    else if ([relatedEntities isKindOfClass:[NSOrderedSet class]])
     {
         for (NSManagedObject *thisEntity in (NSOrderedSet *)relatedEntities)
         {
             NSString *thisValue = ([[thisEntity valueForKeyPath:relKey] isKindOfClass:[NSString class]] ? [thisEntity valueForKeyPath:relKey] : [[thisEntity valueForKeyPath:relKey] stringValue]);
             if ([thisValue isEqualToString:relKeyValue])
             {
-                entity = relatedEntities;
+                entity = thisEntity;
                 break;
             }
         }

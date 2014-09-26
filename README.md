@@ -42,9 +42,9 @@ Relationship Description UserInfo keys
 
 'CreateEntity' - value is unused, it's presence is used to create the relationship entity when ingesting XML.
 
-'Reference' - value is unused, it's presence is used to identify the relationship to a reference table (does not create the relationship entity).
+'Reference' - UpdateEntity's value is unused, it's presence is used to update the relationship entity when ingesting XML.
 
-'Relation' - value is unused, it's presence is used to identify the relationship to an entity within the hierarchy structure (does not create the relationship entity).
+'UpdateEntity' - UpdateEntity's value is unused, it's presence is used to update the relationship entity when ingesting XML.
 
 'SortOrder' - value is a number that indicates the order to sort the relationships of the entity.
 

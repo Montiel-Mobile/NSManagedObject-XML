@@ -71,9 +71,9 @@
 //      table (does not create the relationship entity)
 #define kReference @"Reference"
 
-//      Relation's value is unused, it's presence is used to identify the relationship to an entity within
-//      the root entity's hierarchy structure (does not create the relationship entity)
-#define kRelation @"Relation"
+//      UpdateEntity's value is unused, it's presence is used to update the relationship entity when
+//      ingesting XML
+#define kUpdateEntity @"UpdateEntity"
 
 //      SortOrder's value is a number that indicates the order to sort the relationships
 #define kSortOrder @"SortOrder"
