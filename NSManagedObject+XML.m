@@ -210,21 +210,29 @@
             {
                 for (DDXMLElement *relationshipElement in manyRelElements)
                 {
-                    NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
-                    
-                    NSString *inverseRelName = relationship.inverseRelationship.destinationEntity.name;
-                    
-                    [relEntity setValue:self forKey:inverseRelName];
-                    [relEntity ingestXMLElement:relationshipElement];
+                    NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship andElement:relationshipElement];
+                    if (!relObject)
+                    {
+                        NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
+                        
+                        NSString *inverseRelName = relationship.inverseRelationship.destinationEntity.name;
+                        
+                        [relEntity setValue:self forKey:inverseRelName];
+                        [relEntity ingestXMLElement:relationshipElement];
+                    }
                 }
             }
             else 
             {
                 if (relationshipElement)
                 {
-                    NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
-                    [self setValue:relEntity forKey:relationship.name];
-                    [relEntity ingestXMLElement:relationshipElement];
+                    NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship andElement:relationshipElement];
+                    if (!relObject)
+                    {
+                        NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
+                        [self setValue:relEntity forKey:relationship.name];
+                        [relEntity ingestXMLElement:relationshipElement];
+                    }
                 }
             }
         }
