@@ -44,7 +44,7 @@ Relationship Description UserInfo keys
 
 'Reference' - value is unused, it's presence is used to identify the relationship to a reference table (does not create the relationship entity).
 
-'Relation' - value is unused, it's presence is used to identify the relationship to an entity within the root entity's hierarchy structure (does not create the relationship entity).
+'Relation' - value is unused, it's presence is used to identify the relationship to an entity within the hierarchy structure (does not create the relationship entity).
 
 'SortOrder' - value is a number that indicates the order to sort the relationships of the entity.
 
