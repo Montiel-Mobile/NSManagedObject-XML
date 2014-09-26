@@ -48,8 +48,6 @@ Relationship Description UserInfo keys
 
 'SortOrder' - value is a number that indicates the order to sort the relationships of the entity.
 
-'RootHierarchyAttrKey' - value identifies the path of the unique id of the entity at the top of the hierarchy relative to the given entity.
-
 
 LICENSE
 -------

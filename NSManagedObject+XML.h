@@ -78,10 +78,6 @@
 //      SortOrder's value is a number that indicates the order to sort the relationships
 #define kSortOrder @"SortOrder"
 
-//      RootHierarchyAttrKey identifies the path of the unique id of the entity at the top of the hierarchy
-//      relative to the given entity
-#define kRootHierarchyAttrKey @"RootHierarchyAttrKey"
-
 
 
 
