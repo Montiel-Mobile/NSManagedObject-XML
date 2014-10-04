@@ -16,7 +16,7 @@ Use these keys in the user info section when configuring the core data model to 
 Entity Description UserInfo keys
 --------------------------------
 
-'Overwrite' - when value is "yes" the attributes are overwritten, otherwise they are only written if the entity is new. IMPORTANT: ALL attributes in this entity's definition must NOT HAVE DEFAULT VALUES
+'Overwrite' - when value is "yes" the attributes are overwritten, otherwise they are only written if the entity is new.
 
 'XMLTagName' - value is used as the XML tagname instead of the entity name (optional - used to override the entity name)
 

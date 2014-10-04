@@ -128,20 +128,14 @@
     
     NSDictionary *attributes = self.entity.attributesByName;
     NSString *overwrite = [[self.entity userInfo] objectForKey:kOverwrite];
-    BOOL newEntity = YES;
     
     for (NSString *key in attributes)
     {
-        if ([self valueForKey:key])
-        {
-            newEntity = NO;
-            break;
-        }
-    }
-    
-    for (NSString *key in attributes)
-    {
-        if (newEntity || [[overwrite uppercaseString] isEqualToString:@"YES"])
+        NSAttributeDescription *attrDesc = [attributes objectForKey:key];
+        id currentValue = [self valueForKey:key];
+
+        
+        if (!currentValue || [attrDesc.defaultValue isEqualToValue:currentValue] || [[overwrite uppercaseString] isEqualToString:@"YES"])
         {
             NSString *stringValue = [xmlElement valueForTag:key];
             
