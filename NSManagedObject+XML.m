@@ -128,11 +128,20 @@
     
     NSDictionary *attributes = self.entity.attributesByName;
     NSString *overwrite = [[self.entity userInfo] objectForKey:kOverwrite];
+    BOOL newEntity = YES;
     
     for (NSString *key in attributes)
     {
-        id currentValue = [self valueForKey:key];
-        if (!currentValue || [[overwrite uppercaseString] isEqualToString:@"YES"])
+        if ([self valueForKey:key])
+        {
+            newEntity = NO;
+            break;
+        }
+    }
+    
+    for (NSString *key in attributes)
+    {
+        if (newEntity || [[overwrite uppercaseString] isEqualToString:@"YES"])
         {
             NSString *stringValue = [xmlElement valueForTag:key];
             
@@ -183,10 +192,10 @@
                     }
                     else
                     {
-                        NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
-                        NSString *inverseRelName = relationship.inverseRelationship.destinationEntity.name;
-                        [relEntity setValue:self forKey:inverseRelName];
-                        [relEntity ingestXMLElement:relationshipElement];
+                        relObject = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
+                        NSString *inverseRelName = relationship.inverseRelationship.name;
+                        [relObject setValue:self forKey:inverseRelName];
+                        [relObject ingestXMLElement:relationshipElement];
                     }
                 }
             }
@@ -201,9 +210,10 @@
                     }
                     else
                     {
-                        NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
-                        [self setValue:relEntity forKey:relationship.name];
-                        [relEntity ingestXMLElement:relationshipElement];
+                        relObject = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
+                        NSString *inverseRelName = relationship.inverseRelationship.name;
+                        [relObject setValue:self forKey:inverseRelName];
+                        [relObject ingestXMLElement:relationshipElement];
                     }
                 }
             }
@@ -218,12 +228,10 @@
                     NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship andElement:relationshipElement];
                     if (!relObject)
                     {
-                        NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
-                        
-                        NSString *inverseRelName = relationship.inverseRelationship.destinationEntity.name;
-                        
-                        [relEntity setValue:self forKey:inverseRelName];
-                        [relEntity ingestXMLElement:relationshipElement];
+                        relObject = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
+                        NSString *inverseRelName = relationship.inverseRelationship.name;
+                        [relObject setValue:self forKey:inverseRelName];
+                        [relObject ingestXMLElement:relationshipElement];
                     }
                 }
             }
@@ -234,9 +242,10 @@
                     NSManagedObject *relObject = [self getObjectForRelationshipDesc:relationship andElement:relationshipElement];
                     if (!relObject)
                     {
-                        NSManagedObject *relEntity = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
-                        [self setValue:relEntity forKey:relationship.name];
-                        [relEntity ingestXMLElement:relationshipElement];
+                        relObject = [[NSManagedObject alloc] initWithEntity:relationship.destinationEntity insertIntoManagedObjectContext:self.managedObjectContext];
+                        NSString *inverseRelName = relationship.inverseRelationship.name;
+                        [relObject setValue:self forKey:inverseRelName];
+                        [relObject ingestXMLElement:relationshipElement];
                     }
                 }
             }
