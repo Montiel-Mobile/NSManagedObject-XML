@@ -16,6 +16,8 @@ Use these keys in the user info section when configuring the core data model to 
 Entity Description UserInfo keys
 --------------------------------
 
+'Overwrite' - when value is "yes" the attributes are overwritten, otherwise they are only written if nil
+
 'XMLTagName' - value is used as the XML tagname instead of the entity name (optional - used to override the entity name)
 
 'ReferenceKey' - value is the attribute name that is used as the reference table key

@@ -27,6 +27,9 @@
 
 //ENTITY USERINFO KEYS
 
+//      Overwrite - when value is "yes" the attributes are overwritten, otherwise they are only written if nil
+#define kOverwrite @"Overwrite"
+
 //      XMLTagName's value is used as the XML tagname instead of the entity name (optional - used to override)
 #define kXMLTagName @"XMLTagName"
 

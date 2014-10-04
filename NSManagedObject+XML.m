@@ -127,13 +127,18 @@
     // ATTRIBUTES
     
     NSDictionary *attributes = self.entity.attributesByName;
+    NSString *overwrite = [[self.entity userInfo] objectForKey:kOverwrite];
     
     for (NSString *key in attributes)
     {
-        NSString *stringValue = [xmlElement valueForTag:key];
-        
-        if (stringValue)
-            [self setValue:stringValue forKeyPath:key];
+        id currentValue = [self valueForKey:key];
+        if (!currentValue || [[overwrite uppercaseString] isEqualToString:@"YES"])
+        {
+            NSString *stringValue = [xmlElement valueForTag:key];
+            
+            if (stringValue)
+                [self setValue:stringValue forKeyPath:key];
+        }
     }
     
     // RELATIONSHIPS
