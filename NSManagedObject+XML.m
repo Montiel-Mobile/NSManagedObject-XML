@@ -136,7 +136,7 @@
         NSAttributeDescription *attrDesc = [attributes objectForKey:key];
         id currentValue = [self valueForKey:key];
 
-        if (currentValue && ![attrDesc.defaultValue isEqualToValue:currentValue])
+        if (currentValue && ![attrDesc.defaultValue isEqual:currentValue])
         {
             newEntity = NO;
             break;
