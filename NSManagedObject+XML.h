@@ -89,9 +89,11 @@
 //      Returns a KissXML DDXMLElement representation of the NSManagedObject
 //      See the user info keys for the core data model configuration above
 - (DDXMLElement *)xmlElement;
+- (NSDictionary *)infoElement;
 
 //      populates the attributes and relationships of an NSManagedObject with the KissXML DDXMLElement object
 - (void)ingestXMLElement:(DDXMLElement *)xmlElement;
+- (void)ingestInfoElement:(NSDictionary *)infoElement;
 
 //      Override(s)
 - (void) setValue:(id)value forKeyPath:(NSString *)keyPath;
