@@ -6,7 +6,7 @@ This is a category on NSManagedObject that implements KissXML to generate a DDXM
 HOW TO USE IT
 -------------
 
-This category uses the Google Tool Box class for base64 encoding/decoding at http://google-toolbox-for-mac.googlecode.com/svn/trunk, specifically GTMStringEncoding, which is included here. Also, the KissXML project at https://github.com/robbiehanson/KissXML.git as a git submodule, so you will need to add /usr/include/libxml2 to your header search paths in the build settings. Apple's SecKeyWrapper sample code at http://developer.apple.com is also included here. A DataFormatter singleton which instantiates NSDateFormatter once and reuses it for performance reasons, instead of instantiating it for every use for date processing in this category, is provided as well.
+This category uses the Google Tool Box class for base64 encoding/decoding at http://google-toolbox-for-mac.googlecode.com/svn/trunk, specifically GTMStringEncoding, which is included here. Also, a forked version of the KissXML project at https://github.com/robbiehanson/KissXML.git as a git submodule, so you will need to add /usr/include/libxml2 to your header search paths in the build settings. Apple's SecKeyWrapper sample code at http://developer.apple.com is also included here. A DataFormatter singleton which instantiates NSDateFormatter once and reuses it for performance reasons, instead of instantiating it for every use for date processing in this category, is provided as well.
 
 Core Data UserInfo Keys
 =======================
