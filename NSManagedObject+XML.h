@@ -5,8 +5,7 @@
 //  Copyright (c) 2012 Em Sevn, LLC. All rights reserved.
 //
 
-#import <CoreData/CoreData.h>
-#import "DDXML.h"
+@import CoreData;
 
 #define kDateFormat @"yyyy-MM-dd'T'HH:mm:ss"
 
@@ -82,7 +81,7 @@
 #define kSortOrder @"SortOrder"
 
 
-
+@class DDXMLElement;
 
 @interface NSManagedObject (XML)
 

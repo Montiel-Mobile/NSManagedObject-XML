@@ -5,7 +5,7 @@
 //  Copyright (c) 2012 Em Sevn, LLC. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 @interface EncryptionHelper : NSObject
 

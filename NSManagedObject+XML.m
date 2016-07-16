@@ -6,6 +6,7 @@
 //
 
 #import "NSManagedObject+XML.h"
+#import "DDXML.h"
 #import "DateFormatter.h"
 #import "EncryptionHelper.h"
 #import "GTMStringEncoding.h"
