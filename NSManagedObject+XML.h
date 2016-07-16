@@ -90,7 +90,7 @@
 //      See the user info keys for the core data model configuration above
 - (DDXMLElement *)xmlElement;
 
-//      populates the attributes and relationships of an NSManagedObject with the KissXML DDXMLElement object
+//      populates the attributes and relationships of an NSManagedObject with the KissXML DDXMLElement object and user info keys for the core data model configuration above
 - (void)ingestXMLElement:(DDXMLElement *)xmlElement;
 
 //      Override(s)

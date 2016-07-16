@@ -449,9 +449,7 @@
 {
     NSFetchRequest *request = [self fetchRequestForEntityName:inEntityDesc.name];
     
-    NSString *predicateFormat = [NSString stringWithFormat:@"%@ == '%@'", inAttrKey, inAttrValue];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:predicateFormat arguments:nil];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%@ == '%@'", inAttrKey, inAttrValue];
     
     NSSortDescriptor *sortDesc = [[NSSortDescriptor alloc] initWithKey:inAttrKey ascending:YES];
     
