@@ -14,13 +14,24 @@
 
 @implementation NSManagedObject (XML)
 
-- (DDXMLElement *)xmlElement;
-{
+- (DDXMLElement *)xmlElement {
+    
+    return [self xmlElementWithTag:nil];
+}
+
+- (DDXMLElement *)xmlElementWithTag:(NSString *)tagOverride {
+    
     NSString *entityTagName = [[self.entity userInfo] objectForKey:kXMLTagName];
     DDXMLElement *rootElement = nil;
     
-    if (entityTagName.length > 0)
+    if (tagOverride) {
+        
+        rootElement = [DDXMLElement elementWithName:tagOverride];
+    }
+    else if (entityTagName.length > 0) {
+        
         rootElement = [DDXMLElement elementWithName:entityTagName];
+    }
     else
         rootElement = [DDXMLElement elementWithName:self.entity.name];
     
@@ -96,6 +107,10 @@
     {
         NSRelationshipDescription *relationship = [relationships valueForKey:key];
         
+        NSString *xmlTag = [[relationship userInfo] objectForKey:kXMLTagName];
+        if (!xmlTag) {
+            xmlTag = key;
+        }
         // Check for the Expand user info key to determine whether to expand the relationship
         if ([[relationship userInfo] objectForKey:kExpand])
         {
@@ -106,14 +121,14 @@
                 [rootElement addChild:group];
                 for (NSManagedObject *entity in entities)
                 {
-                    [group addChild:[entity xmlElement]];
+                    [group addChild:[entity xmlElementWithTag:xmlTag]];
                 }
             }
             else
             {
                 NSManagedObject *entity = [self valueForKeyPath:key];
                 if (entity)
-                    [rootElement addChild:[entity xmlElement]];
+                    [rootElement addChild:[entity xmlElementWithTag:xmlTag]];
                 else
                     [rootElement addChild:[DDXMLElement elementWithName:key]];
             }
