@@ -159,33 +159,35 @@
     
     NSDictionary *relationships = self.entity.relationshipsByName;
     NSArray *sortedKeys = [self sortedEntityRelationships];
-    for (NSString *key in sortedKeys)
-    {
+    for (NSString *key in sortedKeys) {
+        
         NSRelationshipDescription *relationship = [relationships valueForKey:key];
         NSString *relEntityName = relationship.name;
         
-        NSString *relTagName = nil;
-        if (!(relTagName = [[relationship.destinationEntity userInfo] objectForKey:kXMLTagName]))
+        NSString *relTagName = [[relationship userInfo] objectForKey:kXMLTagName];
+        if (!relTagName) {
+            
             relTagName = relationship.destinationEntity.name;
+        }
         
         DDXMLElement *manyRelElement = nil;
-        NSArray *manyRelElements = [xmlElement elementsForName:relEntityName];
+        NSArray *manyRelElements = nil;
         DDXMLElement *relationshipElement = nil;
         
-        if (relationship.isToMany)
-        {
+        if (relationship.isToMany) {
+            
             manyRelElement = [[xmlElement elementsForName:relEntityName] lastObject];
             manyRelElements = [manyRelElement elementsForName:relTagName];
         }
-        else 
-        {
+        else {
+            
             relationshipElement = [[xmlElement elementsForName:relTagName] lastObject];
         }
         
         // Check for the CreateEntity & Relation user info key to determine whether to update or create
         if ([[relationship userInfo] objectForKey:kCreateEntity] &&
-            [[relationship userInfo] objectForKey:kUpdateEntity])
-        {
+            [[relationship userInfo] objectForKey:kUpdateEntity]) {
+            
             if (relationship.isToMany)
             {
                 for (DDXMLElement *relationshipElement in manyRelElements)
