@@ -177,7 +177,9 @@
             
             if (stringValue) {
                 
+                [self willChangeValueForKey:key];
                 [self setValue:stringValue forKeyPath:key];
+                [self didChangeValueForKey:key];
             }
         }
     }
@@ -327,8 +329,9 @@
                         
                         NSMutableSet *objects = [self valueForKey:relationship.name];
                         [objects addObject:relObject];
+                        [self willChangeValueForKey:relationship.name];
                         [self setValue:objects forKey:relationship.name];
-
+                        [self didChangeValueForKey:relationship.name];
                     }
                 }
             }
@@ -341,7 +344,9 @@
                     NSManagedObject *relObject = [self getObjectForEntityDesc:relationship.destinationEntity forAttrKey:attrKey andAttrValue:attrValue];
                     if (relObject) {
                         
+                        [self willChangeValueForKey:relationship.name];
                         [self setValue:relObject forKey:relationship.name];
+                        [self didChangeValueForKey:relationship.name];
                     }
                 }
             }
