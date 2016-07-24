@@ -48,6 +48,9 @@
 //      encrypted's value is unused, it's presence identifies encrypted NSStrings (stored as NSData)
 #define kEncrypted @"encrypted"
 
+//      HTMLString's value is unused, it's presence identifies CDATA wrapped HTML
+#define kHTMLString @"HTMLString"
+
 //      base64 value is unused, it's presence identifies binary data that is to be base64 encoded for XML
 #define kBase64 @"base64"
 

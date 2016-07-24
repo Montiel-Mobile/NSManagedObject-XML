@@ -11,6 +11,7 @@
 #import "EncryptionHelper.h"
 #import "GTMStringEncoding.h"
 #import "DDXMLElement+conv.h"
+#import "DDXMLNode+CDATA.h"
 
 @implementation NSManagedObject (XML)
 
@@ -39,59 +40,64 @@
     
     NSDictionary *attributes = self.entity.attributesByName;
     
-    for (NSString *key in attributes)
-    {
+    for (NSString *key in attributes) {
+        
         NSAttributeDescription *attributeDesc = [attributes objectForKey:key];
         
-        if (![attributeDesc.userInfo objectForKey:kExclude])
-        {
+        if (![attributeDesc.userInfo objectForKey:kExclude]) {
+            
             NSString *attrValue = nil;
             
             if (attributeDesc.attributeType == NSInteger16AttributeType ||
                 attributeDesc.attributeType == NSInteger32AttributeType ||
                 attributeDesc.attributeType == NSInteger64AttributeType ||
-                attributeDesc.attributeType == NSDecimalAttributeType)
-            {
+                attributeDesc.attributeType == NSDecimalAttributeType) {
+                
                 attrValue = [NSString stringWithFormat:@"%i", (int)[(NSNumber *)[self valueForKeyPath:key] integerValue]];
             }
-            else if (attributeDesc.attributeType == NSDoubleAttributeType)
-            {
+            else if (attributeDesc.attributeType == NSDoubleAttributeType) {
+                
                 attrValue = [NSString stringWithFormat:@"%f", [(NSNumber *)[self valueForKeyPath:key] doubleValue]];
             }
-            else if (attributeDesc.attributeType == NSFloatAttributeType)
-            {
+            else if (attributeDesc.attributeType == NSFloatAttributeType) {
+                
                 attrValue = [NSString stringWithFormat:@"%f", [(NSNumber *)[self valueForKeyPath:key] floatValue]];
             }
-            else if (attributeDesc.attributeType == NSStringAttributeType)
-            {
+            else if (attributeDesc.attributeType == NSStringAttributeType) {
+                
                 attrValue = [self valueForKeyPath:key];
             }
-            else if (attributeDesc.attributeType == NSBooleanAttributeType)
-            {
+            else if (attributeDesc.attributeType == NSBooleanAttributeType) {
+                
                 attrValue = [NSString stringWithFormat:@"%i", (int)[(NSNumber *)[self valueForKeyPath:key] integerValue]];
             }
-            else if (attributeDesc.attributeType == NSDateAttributeType)
-            {
+            else if (attributeDesc.attributeType == NSDateAttributeType) {
+                
                 NSDateFormatter *formatter = [[DateFormatter sharedHelper] dateFormatter];
                 NSString *format = [attributeDesc.userInfo objectForKey:kDateTimeFormat];
                 formatter.dateFormat = (format ? format : kDateFormat);
                 
                 attrValue = [formatter stringFromDate:(NSDate *)[self valueForKeyPath:key]];
             }
-            else if (attributeDesc.attributeType == NSBinaryDataAttributeType)
-            {
-                if ([[attributeDesc userInfo] objectForKey:kEncrypted])
-                {
+            else if (attributeDesc.attributeType == NSBinaryDataAttributeType) {
+                
+                if ([[attributeDesc userInfo] objectForKey:kEncrypted]) {
+                    
                     attrValue = [[EncryptionHelper sharedHelper] decryptData:(NSData *)[self valueForKeyPath:key]];
                 }
-                else if ([[attributeDesc userInfo] objectForKey:kBase64])
-                {
+                else if ([[attributeDesc userInfo] objectForKey:kBase64]) {
+                    
                     GTMStringEncoding *encoding = [GTMStringEncoding rfc4648Base64StringEncoding];
                     attrValue = [encoding encode:(NSData *)[self valueForKeyPath:key]];
                 }
             }
             
-            if (attrValue)
+            if (attrValue && attributeDesc.attributeType == NSStringAttributeType && [[attributeDesc userInfo] objectForKey:kHTMLString]) {
+                
+                DDXMLElement *attrElement = [DDXMLNode cdataElementWithName:key stringValue:attrValue];
+                [rootElement addChild:attrElement];
+            }
+            else if (attrValue)
             {
                 DDXMLElement *attrElement = [DDXMLElement elementWithName:key stringValue:attrValue];
                 [rootElement addChild:attrElement];
