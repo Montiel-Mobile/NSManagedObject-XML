@@ -334,7 +334,7 @@
         // to a reference table entity
         else if ([[relationship userInfo] objectForKey:kReference]) {
             
-            if (relationship.isToMany) {
+            if (relationship.isToMany && relationship.inverseRelationship.isToMany) {
                 
                 for (DDXMLElement *relationshipElement in manyRelElements) {
                     
@@ -345,9 +345,27 @@
                         
                         NSMutableSet *objects = [self valueForKey:relationship.name];
                         [objects addObject:relObject];
-                        [self willChangeValueForKey:relationship.name];
-                        [self setValue:objects forKey:relationship.name];
-                        [self didChangeValueForKey:relationship.name];
+                        
+                        NSMutableSet *inverseObjects = [relObject valueForKey:relationship.inverseRelationship.name];
+                        [inverseObjects addObject:self];
+                    }
+                }
+            }
+            else if (relationship.isToMany) {
+                
+                for (DDXMLElement *relationshipElement in manyRelElements) {
+                    
+                    NSString *attrKey = [relationship.destinationEntity.userInfo objectForKey:kReferenceKey];
+                    NSString *attrValue = [relationshipElement valueForTag:attrKey];
+                    NSManagedObject *relObject = [self getObjectForEntityDesc:relationship.destinationEntity forAttrKey:attrKey andAttrValue:attrValue];
+                    if (relObject) {
+                        
+                        NSMutableSet *objects = [self valueForKey:relationship.name];
+                        [objects addObject:relObject];
+                     
+                        [relObject willChangeValueForKey:relationship.inverseRelationship.name];
+                        [relObject setValue:relObject forKey:relationship.inverseRelationship.name];
+                        [relObject didChangeValueForKey:relationship.inverseRelationship.name];
                     }
                 }
             }
