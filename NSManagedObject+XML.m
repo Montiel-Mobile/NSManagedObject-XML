@@ -358,13 +358,11 @@
                     NSString *attrKey = [relationship.destinationEntity.userInfo objectForKey:kReferenceKey];
                     NSString *attrValue = [relationshipElement valueForTag:attrKey];
                     NSManagedObject *relObject = [self getObjectForEntityDesc:relationship.destinationEntity forAttrKey:attrKey andAttrValue:attrValue];
+                    
                     if (relObject) {
-                        
-                        NSMutableSet *objects = [self valueForKey:relationship.name];
-                        [objects addObject:relObject];
-                     
+                                             
                         [relObject willChangeValueForKey:relationship.inverseRelationship.name];
-                        [relObject setValue:relObject forKey:relationship.inverseRelationship.name];
+                        [relObject setValue:self forKey:relationship.inverseRelationship.name];
                         [relObject didChangeValueForKey:relationship.inverseRelationship.name];
                     }
                 }
