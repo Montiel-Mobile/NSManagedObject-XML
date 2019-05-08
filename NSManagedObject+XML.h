@@ -5,7 +5,7 @@
 //  Copyright (c) 2012 Em Sevn, LLC. All rights reserved.
 //
 
-@import CoreData;
+#import <CoreData/CoreData.h>
 
 #define kDateFormat @"yyyy-MM-dd'T'HH:mm:ss"
 
