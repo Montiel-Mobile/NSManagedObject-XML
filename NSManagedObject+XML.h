@@ -62,6 +62,12 @@
 //      kDateFormat is used
 #define kDateTimeFormat @"Format"
 
+//      PHAsset's value is not used. It's presence indicates
+//      the fields contains a PHAsset's localIdentifier and is used to base64 encode asset when
+//      generating XML, and to create a new PHAsset when ingesting XML.
+#define kPHAssetField @"PHAsset"
+
+
 //Relationship userInfo keys
 
 //      Expand's value is unused, it's presence identifies a relationship that will be XML expanded.
@@ -96,6 +102,6 @@
 - (void)ingestXMLElement:(DDXMLElement *)xmlElement;
 
 //      Override(s)
-- (void) setValue:(id)value forKeyPath:(NSString *)keyPath;
+- (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
 
 @end

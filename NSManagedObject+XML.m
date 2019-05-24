@@ -13,6 +13,9 @@
 #import "DDXMLElement+conv.h"
 #import "DDXMLNode+CDATA.h"
 
+@import Photos;
+@import ImageIO;
+
 @implementation NSManagedObject (XML)
 
 - (DDXMLElement *)xmlElement {
@@ -23,7 +26,7 @@
 - (DDXMLElement *)xmlElementWithTag:(NSString *)tagOverride {
     
     NSString *entityTagName = [[self.entity userInfo] objectForKey:kXMLTagName];
-    DDXMLElement *rootElement = nil;
+    __block DDXMLElement *rootElement = nil;
     
     if (tagOverride) {
         
@@ -65,7 +68,24 @@
             }
             else if (attributeDesc.attributeType == NSStringAttributeType) {
                 
-                attrValue = [self valueForKeyPath:key];
+                if ([[attributeDesc userInfo] objectForKey:kPHAssetField]) {
+                    
+                    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
+                        
+                        PHFetchResult<PHAsset *> *results = [PHAsset fetchAssetsWithLocalIdentifiers:@[[self valueForKeyPath:key]] options:nil];
+                        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+                        options.synchronous = YES;
+                        __block NSData *data = nil;
+                        [[PHImageManager defaultManager] requestImageDataForAsset:results[0] options:options resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+                            data = imageData;
+                        }];
+                        GTMStringEncoding *encoding = [GTMStringEncoding rfc4648Base64StringEncoding];
+                        attrValue = [encoding encode:data];
+                    }
+                }
+                else {
+                    attrValue = [self valueForKeyPath:key];
+                }
             }
             else if (attributeDesc.attributeType == NSBooleanAttributeType) {
                 
@@ -444,7 +464,26 @@
         }
         else if (attributeDesc.attributeType == NSStringAttributeType) {
             
-            newValue = oldValue;
+            if ([[attributeDesc userInfo] objectForKey:kPHAssetField]) {
+                if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
+                    GTMStringEncoding *encoding = [GTMStringEncoding rfc4648Base64StringEncoding];
+                    NSData *data = [encoding decode:oldValue];
+                    UIImage *image = [UIImage imageWithData:data];
+                    __block PHObjectPlaceholder *assetPlaceholder = nil;
+                    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+                        PHAssetChangeRequest *createAssetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
+                        assetPlaceholder = [createAssetRequest placeholderForCreatedAsset];
+                    }
+                    completionHandler:^(BOOL success, NSError* error) {
+                        if (success) {
+                            [super setValue:assetPlaceholder.localIdentifier forKeyPath:keyPath];
+                        }
+                    }];
+                }
+            }
+            else {
+                newValue = oldValue;
+            }
         }
         else if (attributeDesc.attributeType == NSBooleanAttributeType) {
             
