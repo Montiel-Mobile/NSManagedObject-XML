@@ -54,7 +54,7 @@ Relationship Description UserInfo keys
 LICENSE
 -------
 
-Copyright (C) 2012 by Em Sevn, LLC
+Copyright (C) 2012-2019 by Montiel Mobile, LLC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
