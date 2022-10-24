@@ -76,7 +76,7 @@
                         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
                         options.synchronous = YES;
                         __block NSData *data = nil;
-                        [[PHImageManager defaultManager] requestImageDataForAsset:results[0] options:options resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+                        [[PHImageManager defaultManager] requestImageDataAndOrientationForAsset:results[0] options:options resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, CGImagePropertyOrientation orientation, NSDictionary * _Nullable info) {
                             data = imageData;
                         }];
                         GTMStringEncoding *encoding = [GTMStringEncoding rfc4648Base64StringEncoding];
